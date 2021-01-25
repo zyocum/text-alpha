@@ -13,7 +13,7 @@ The expected data format is character-level standoff annotations in the [Basis T
 ## Setup
 `alpha.py` requires Python 3.8+.  There are no other dependencies.
 
-If you prefer to reformat the tabular output in a more human-friendly way, you can install tabulate with the provided `requirementx.txt`:
+If you prefer to reformat the tabular output in a more human-friendly way, you can install [`tabulate`](https://github.com/astanin/python-tabulate) with the provided `requirementx.txt`:
 
 ```shell
 $ python -m venv text-alpha
