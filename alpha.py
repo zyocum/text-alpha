@@ -136,7 +136,7 @@ class ADM(dict):
                 prev_start, prev_end = start, end
         if end < len(self):
             # gap after the last labeled extent
-            yield {'label': None, 'start': end, 'end': len(self)}
+            yield {'label': None, 'start': end, 'end': len(self) + 1}
     
     def subjects(self, annotator, label=None):
         for chunk in self.chunks(label=label):
