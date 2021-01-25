@@ -1,0 +1,39 @@
+{
+  "data": "foobarbaz",
+  "attributes": {
+    "entities": {
+      "type": "list",
+      "itemType": "entities",
+      "items": [
+        {
+          "mentions": [
+            {
+              "startOffset": 0,
+              "endOffset": 3
+            }
+          ],
+          "type": "PERSON"
+        },
+        {
+          "mentions": [
+            {
+              "startOffset": 3,
+              "endOffset": 6
+            }
+          ],
+          "type": "ORGANIZATION"
+        },
+        {
+          "mentions": [
+            {
+              "startOffset": 6,
+              "endOffset": 9
+            }
+          ],
+          "type": "LOCATION"
+        }
+      ]
+    }
+  },
+  "documentMetadata": {}
+}

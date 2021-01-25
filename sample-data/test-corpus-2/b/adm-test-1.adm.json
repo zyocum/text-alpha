@@ -1,0 +1,30 @@
+{
+  "data": "foo bar baz",
+  "attributes": {
+    "entities": {
+      "type": "list",
+      "itemType": "entities",
+      "items": [
+        {
+          "mentions": [
+            {
+              "startOffset": 0,
+              "endOffset": 3
+            }
+          ],
+          "type": "FOO"
+        },
+        {
+          "mentions": [
+            {
+              "startOffset": 8,
+              "endOffset": 11
+            }
+          ],
+          "type": "BAZ"
+        }
+      ]
+    }
+  },
+  "documentMetadata": {}
+}
