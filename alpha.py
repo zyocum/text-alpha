@@ -170,14 +170,22 @@ def sniff(
 ):
     """Compute, cache, and return (as a tuple) the following:
     
-    1. The total length of all documents annotated by at least 2 annotators 
-    (i.e., what Krippendorff refers to as "continuum length").
+    1. MappingProxyType(continuums):
+        A mapping from docids to the length of data associated with
+        that docid. (i.e., what Krippendorff refers to as "continuum length").
     
-    2. A mapping of document IDs to the parallel annotated documents annotated 
-    by each annotator.
+    2. MappingProxyType(docids):
+        A mapping from docids to lists of parallel documents index by the 
+        annotator who annotated the document.
     
-    3. The frequency with which annotators assigned each label in their 
-    annotations.
+    3. MappingProxyType(label_counts):
+        A mapping from labels to the frequencies of annotations with those
+        labels over the entire corpus (including annotations from all 
+        annotators).
+    
+    4. MappingProxyType(docid_counts):
+        A nested mapping of docids -> labels -> frequencies of annotations
+        with those labels within the documents identified by the docid.
     
     This function is cached for convenience because these values can be
     reused when computing both the observed and expected agreements.
@@ -479,7 +487,7 @@ if __name__ == '__main__':
         '-R', '--non-recursive',
         action='store_false',
         default=True,
-        help='if this is specified, annotator directories will not be searched recursively for annotatin files',
+        help='if this is specified, annotator directories will not be searched recursively for annotation files',
     )
     parser.add_argument(
         '-l', '--labels',
