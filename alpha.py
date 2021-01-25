@@ -314,7 +314,6 @@ def expectation(
         verbose=verbose
     )
     continuum_length = sum(continuums.values())
-    anns = {ann: i for i, ann in enumerate(annotators)}
     expectations = {label: 0 for label in label_counts}
     possible_locations = {label: 0 for label in label_counts}
     denominator = {label: 0 for label in label_counts}
@@ -424,7 +423,6 @@ def main(
     """Command-line driver function."""
     if pairwise:
         pairs = list(combinations(annotators, 2))
-        scores = {}
         matrix = [[''] * (len(annotators) - 1) for _ in annotators]
         index = {v: k for k, v in enumerate(annotators)}
         for pair in pairs:
