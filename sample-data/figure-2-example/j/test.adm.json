@@ -1,0 +1,61 @@
+{
+    "data": "                                                                                                                                                                                                                                                                                                            ",
+    "attributes": {
+        "entities": {
+            "type": "list",
+            "itemType": "entities",
+            "items": [
+                {
+                    "mentions": [
+                        {
+                            "startOffset": 30,
+                            "endOffset": 90
+                        }
+                    ],
+                    "type": "k"
+                },
+                {
+                    "mentions": [
+                        {
+                            "startOffset": 70,
+                            "endOffset": 150
+                        }
+                    ],
+                    "type": "c"
+                },
+                {
+                    "mentions": [
+                        {
+                            "startOffset": 150,
+                            "endOffset": 200
+                        }
+                    ],
+                    "type": "k"
+                },
+                {
+                    "mentions": [
+                        {
+                            "startOffset": 205,
+                            "endOffset": 225
+                        }
+                    ],
+                    "type": "c"
+                },
+                {
+                    "mentions": [
+                        {
+                            "startOffset": 250,
+                            "endOffset": 270
+                        }
+                    ],
+                    "type": "c"
+                }
+            ]
+        }
+    },
+    "documentMetadata": {
+        "annotator": [
+            "j"
+        ]
+    }
+}
