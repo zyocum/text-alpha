@@ -6,7 +6,7 @@ The implementation is based on the formulation of Krippendorff's alpha for textu
 [Krippendorff, Klaus. "Measuring the reliability of qualitative text analysis data."
 Quality and quantity 38 (2004): 787-800.](https://repository.upenn.edu/cgi/viewcontent.cgi?article=1042&context=asc_papers)
 
-The worked example included in the appendix of [Krippendorff (2004)]((https://repository.upenn.edu/cgi/viewcontent.cgi?article=1042&context=asc_papers)) is included in the sample data for testing:
+The worked example included in the appendix of [Krippendorff (2004)]((https://repository.upenn.edu/cgi/viewcontent.cgi?article=1042&context=asc_papers)) is included in the sample data for testing: [`figure-2-example`](https://github.com/zyocum/text-alpha/tree/main/sample-data/figure-2-example)
 
 The expected data format is character-level standoff annotations in the [Basis Technology Annotated Data Model](https://github.com/basis-technology-corp/annotated-data-model).
 
