@@ -24,6 +24,7 @@ from glob import iglob
 from itertools import combinations
 from itertools import product
 from operator import itemgetter
+from operator import methodcaller
 from pathlib import Path
 from types import MappingProxyType
 
@@ -56,6 +57,7 @@ class ADMCorpus(list):
     def __init__(
         self,
         directory,
+        items='mentions',
         pattern='*.adm.json',
         recursive=True
     ):
@@ -65,11 +67,12 @@ class ADMCorpus(list):
             raise ValueError(f'{self.directory!r} is not a directory!')
         self.pattern = pattern
         self.recursive = recursive
+        self.items = items
         self.load()
     
     def load(self):
         self.extend([
-            ADM(f) for f in find_files(
+            ADM(f, items=self.items) for f in find_files(
                 directory=self.directory,
                 pattern=self.pattern,
                 recursive=self.recursive
@@ -78,8 +81,9 @@ class ADMCorpus(list):
 
 class ADM(dict):
     """A dict-like class modeling an ADM with some extra bells & whistles"""
-    def __init__(self, filename):
+    def __init__(self, filename, items='mentions'):
         self.filename = Path(filename)
+        self.items = items
         if not self.filename.is_file():
             raise ValueError(f'{filename!r} is not a file!')
         self.load()
@@ -114,7 +118,7 @@ class ADM(dict):
             self.update(adm)
     
     def mentions(self):
-        """Generate a list of entity mentions augmented with their
+        """Generate entity mentions augmented with their
         named entity types.
         """
         for entity in self.attributes['entities']['items']:
@@ -122,23 +126,61 @@ class ADM(dict):
                 mention['type'] = entity.get('type')
                 yield mention
     
+    def sentences(self):
+        """Generate sentences from the ADM"""
+        for sentence in self.attributes['sentence']['items']:
+            sentence['type'] = self.attributes['sentence'].get('itemType')
+            yield sentence
+    
+    def tokens(self):
+        """Generate tokens from the ADM"""
+        for token in self.attributes['token']['items']:
+            token['type'] = self.attributes['token'].get('itemType')
+            yield token
+    
+    def postags(self):
+        """Generate tokens from the ADM labeld with their part of speech tags"""
+        for token in self.attributes['token']['items']:
+            analysis, *_ = token['analyses']
+            token['type'] = analysis.get('partOfSpeech')
+            yield token
+    
+    def lemmas(self):
+        """Generate tokens from the ADM labeld with their lemmas"""
+        for token in self.attributes['token']['items']:
+            analysis, *_ = token['analyses']
+            token['type'] = analysis.get('lemma')
+            yield token
+        
+    
     def chunks(self, label=None):
-        start, end = 0, 0
-        prev_start, prev_end = 0, 0
-        for mention in sorted(self.mentions(), key=extent):
-            if (label is None) or (mention.get('type') == label):
-                start, end = extent(mention)
-                if prev_end < start:
-                    # unlabeled gap
-                    yield {'label': None, 'start': prev_end, 'end': start}
-                # labeled extent
-                yield {'label': mention['type'], 'start': start, 'end': end}
-                prev_start, prev_end = start, end
-        if end < len(self):
-            # gap after the last labeled extent
-            yield {'label': None, 'start': end, 'end': len(self) + 1}
+        """Generate labeled chunks and gaps between chunks"""
+        try:
+            start, end = 0, 0
+            prev_start, prev_end = 0, 0
+            for item in sorted(methodcaller(self.items)(self), key=extent):
+                if (label is None) or (item.get('type') == label):
+                    start, end = extent(item)
+                    if prev_end < start:
+                        # unlabeled gap
+                        yield {'label': None, 'start': prev_end, 'end': start}
+                    # labeled extent
+                    yield {'label': item['type'], 'start': start, 'end': end}
+                    prev_start, prev_end = start, end
+            if end < len(self):
+                # gap after the last labeled extent
+                yield {'label': None, 'start': end, 'end': len(self) + 1}
+        except KeyError:
+            print(
+                f'[ERROR] {self.filename}: this ADM JSON contains no {self.items!r} annotations',
+                file=sys.stderr
+            )
+            sys.exit(1)
     
     def subjects(self, annotator, label=None):
+        """Generate LabeledExtent instances that are suitable subjects for
+        computing Krippendorff's alpha.  Each subject refers back to the ADM
+        it was generated from for convenience."""
         for chunk in self.chunks(label=label):
             yield LabeledExtent(
                 **chunk,
@@ -163,6 +205,7 @@ class LabeledExtent:
 @lru_cache(maxsize=32, typed=True)
 def sniff(
     annotators,
+    items='mentions',
     pattern='*.adm.json',
     recursive=False,
     labels=None,
@@ -191,7 +234,12 @@ def sniff(
     reused when computing both the observed and expected agreements.
     """
     corpora = {
-        annotator: ADMCorpus(annotator, pattern=pattern, recursive=recursive)
+        annotator: ADMCorpus(
+            annotator,
+            items=items,
+            pattern=pattern,
+            recursive=recursive
+        )
         for annotator in sorted(annotators)
     }
     anns = {ann: i for i, ann in enumerate(corpora)}
@@ -244,6 +292,7 @@ def sniff(
 @lru_cache(maxsize=32, typed=True)
 def observation(
     annotators,
+    items='mentions',
     pattern='*.adm.json',
     recursive=True,
     labels=None,
@@ -252,6 +301,7 @@ def observation(
     """Compute per-label observed agreement."""
     continuums, docids, label_counts, docid_counts = sniff(
         annotators,
+        items=items,
         pattern=pattern,
         recursive=recursive,
         labels=labels,
@@ -300,6 +350,7 @@ def observation(
 @lru_cache(maxsize=32, typed=True)
 def expectation(
     annotators,
+    items='mentions',
     pattern='*.adm.json',
     recursive=True,
     labels=None,
@@ -308,6 +359,7 @@ def expectation(
     """Compute per-label expected agreement."""
     continuums, docids, label_counts, docid_counts = sniff(
         annotators,
+        items=items,
         pattern=pattern,
         recursive=recursive,
         labels=labels,
@@ -355,6 +407,7 @@ def expectation(
 
 def alpha(
     annotators,
+    items='mentions',
     pattern='*.adm.json',
     recursive=True,
     labels=None,
@@ -363,6 +416,7 @@ def alpha(
     """Compute per-label alpha."""
     observed = observation(
         annotators,
+        items=items,
         pattern=pattern,
         recursive=recursive,
         labels=labels,
@@ -370,6 +424,7 @@ def alpha(
     )
     expected = expectation(
         annotators,
+        items=items,
         pattern=pattern,
         recursive=recursive,
         labels=labels,
@@ -386,6 +441,7 @@ def alpha(
 
 def overall_alpha(
     annotators,
+    items='mentions',
     pattern='*.adm.json',
     recursive=True,
     labels=None,
@@ -394,6 +450,7 @@ def overall_alpha(
     """Compute overall alpha (aggregated over all labels)."""
     observed = observation(
         annotators,
+        items=items,
         pattern=pattern,
         recursive=recursive,
         labels=labels,
@@ -401,6 +458,7 @@ def overall_alpha(
     )
     expected = expectation(
         annotators,
+        items=items,
         pattern=pattern,
         recursive=recursive,
         labels=labels,
@@ -414,6 +472,7 @@ def overall_alpha(
 
 def main(
     annotators,
+    items='mentions',
     pattern='*.adm.json',
     recursive=True,
     labels=None,
@@ -431,6 +490,7 @@ def main(
             matrix[i][j-1] = '{:0.3f}'.format(
                 overall_alpha(
                     pair,
+                    items=items,
                     pattern=pattern,
                     recursive=recursive,
                     labels=labels,
@@ -446,6 +506,7 @@ def main(
         for label, score in sorted(
             alpha(
                 annotators,
+                items=items,
                 pattern=pattern,
                 recursive=recursive,
                 labels=labels,
@@ -457,6 +518,7 @@ def main(
             print(f'{label}\t{score}')
         overall_score = overall_alpha(
             annotators,
+            items=items,
             pattern=pattern,
             recursive=recursive,
             labels=labels,
@@ -488,6 +550,12 @@ if __name__ == '__main__':
         help='if this is specified, annotator directories will not be searched recursively for annotation files',
     )
     parser.add_argument(
+        '-i', '--items',
+        default='mentions',
+        choices={'mentions', 'tokens', 'sentences', 'postags', 'lemmas'},
+        help='choose which ADM attribute items to compute alpha for'
+    )
+    parser.add_argument(
         '-l', '--labels',
         nargs='+',
         default=None,
@@ -506,6 +574,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     main(
         tuple(args.annotators),
+        items=args.items,
         pattern=args.glob_pattern,
         recursive=args.non_recursive,
         labels=args.labels if args.labels is None else tuple(args.labels),
