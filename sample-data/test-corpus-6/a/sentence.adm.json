@@ -1,0 +1,146 @@
+{
+  "version": "1.1.0",
+  "data": "Mr. You dropped something.",
+  "attributes": {
+    "scriptRegion": {
+      "type": "list",
+      "itemType": "scriptRegion",
+      "items": [
+        {
+          "startOffset": 0,
+          "endOffset": 26,
+          "script": "Latn"
+        }
+      ]
+    },
+    "sentence": {
+      "type": "list",
+      "itemType": "sentence",
+      "items": [
+        {
+          "startOffset": 0,
+          "endOffset": 26
+        }
+      ]
+    },
+    "layoutRegion": {
+      "type": "list",
+      "itemType": "layoutRegion",
+      "items": [
+        {
+          "startOffset": 0,
+          "endOffset": 26,
+          "layout": "STRUCTURED"
+        }
+      ]
+    },
+    "languageDetection": {
+      "type": "languageDetection",
+      "startOffset": 0,
+      "endOffset": 26,
+      "detectionResults": [
+        {
+          "language": "eng",
+          "encoding": "UTF-16BE",
+          "script": "Latn",
+          "confidence": 0.23958242
+        }
+      ]
+    },
+    "token": {
+      "type": "list",
+      "itemType": "token",
+      "items": [
+        {
+          "startOffset": 0,
+          "endOffset": 3,
+          "text": "Mr.",
+          "analyses": [
+            {
+              "partOfSpeech": "PROPN",
+              "lemma": "Mister",
+              "raw": "Mister[+Title][+Abbr][+TIT]",
+              "tagSet": "UPT16_V1"
+            }
+          ]
+        },
+        {
+          "startOffset": 4,
+          "endOffset": 7,
+          "text": "You",
+          "analyses": [
+            {
+              "partOfSpeech": "PROPN",
+              "lemma": "You",
+              "raw": "You[+Propn]",
+              "tagSet": "UPT16_V1"
+            }
+          ]
+        },
+        {
+          "startOffset": 8,
+          "endOffset": 15,
+          "text": "dropped",
+          "analyses": [
+            {
+              "partOfSpeech": "VERB",
+              "lemma": "drop",
+              "raw": "drop[+Verb][+PastBoth][+123SP][+VPAST]",
+              "tagSet": "UPT16_V1"
+            },
+            {
+              "partOfSpeech": "ADJ",
+              "lemma": "dropped",
+              "raw": "dropped[+Adj][+VPap][+ADJPAP]",
+              "tagSet": "UPT16_V1"
+            },
+            {
+              "partOfSpeech": "VERB",
+              "lemma": "drop",
+              "raw": "drop[+Verb][+PastBoth][+123SP][+VPAP]",
+              "tagSet": "UPT16_V1"
+            },
+            {
+              "partOfSpeech": "VERB",
+              "lemma": "drop",
+              "raw": "drop[+Verb][+PastBoth][+123SP][+PARTPAST]",
+              "tagSet": "UPT16_V1"
+            }
+          ]
+        },
+        {
+          "startOffset": 16,
+          "endOffset": 25,
+          "text": "something",
+          "analyses": [
+            {
+              "partOfSpeech": "PRON",
+              "lemma": "something",
+              "raw": "something[+Pron][+NomObl][+3P][+Sg][+PRON]",
+              "tagSet": "UPT16_V1"
+            }
+          ]
+        },
+        {
+          "startOffset": 25,
+          "endOffset": 26,
+          "text": ".",
+          "analyses": [
+            {
+              "partOfSpeech": "PUNCT",
+              "lemma": ".",
+              "raw": ".[+Punct][+Sent][+SENT]",
+              "tagSet": "UPT16_V1"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "documentMetadata": {
+    "processedBy": [
+      "language-identification@10.39.77.74",
+      "base-linguistics@10.39.77.74"
+    ]
+  }
+}
