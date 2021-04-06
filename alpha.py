@@ -439,13 +439,20 @@ def alpha(
             alpha[label] = float('nan')
     return alpha
 
+# register ways of computing average alpha scores
+AVERAGES = (
+    'micro',
+    'macro'
+)
+
 def overall_alpha(
     annotators,
     items='mentions',
     pattern='*.adm.json',
     recursive=True,
     labels=None,
-    verbose=False
+    verbose=False,
+    average='micro'
 ):
     """Compute overall alpha (aggregated over all labels)."""
     observed = observation(
@@ -465,8 +472,24 @@ def overall_alpha(
         verbose=verbose
     )
     assert set(observed) == set(expected)
+    if average not in AVERAGES:
+        raise ValueError(
+            f'average must be one of: {AVERAGES!r} '
+            '(got average={average!r})'
+        )
     try:
-        return 1 - (sum(observed.values()) / sum(expected.values()))
+        if average == 'micro':
+            # micro-average is weighted based on label support
+            return 1 - (sum(observed.values()) / sum(expected.values()))
+        if average == 'macro':
+            # macro-average gives even weight to each label
+            # by taking the arithmetic mean of per-label alpha scores
+            # (even if label supports are imbalanced)
+            disagreements = list(zip(observed.values(), expected.values()))
+            return sum(
+                1 - (d_o / d_e)
+                for (d_o, d_e) in disagreements
+            ) / len(disagreements)
     except ZeroDivisionError:
         return float('nan')
 
@@ -481,27 +504,29 @@ def main(
 ):
     """Command-line driver function."""
     if pairwise:
-        pairs = list(combinations(annotators, 2))
-        matrix = [[''] * (len(annotators) - 1) for _ in annotators]
-        index = {v: k for k, v in enumerate(annotators)}
-        for pair in pairs:
-            ann_i, ann_j = pair
-            i, j = index[ann_i], index[ann_j]
-            matrix[i][j-1] = '{:0.3f}'.format(
-                overall_alpha(
-                    pair,
-                    items=items,
-                    pattern=pattern,
-                    recursive=recursive,
-                    labels=labels,
-                    verbose=verbose
+        for average in AVERAGES:
+            pairs = list(combinations(annotators, 2))
+            matrix = [[''] * (len(annotators) - 1) for _ in annotators]
+            index = {v: k for k, v in enumerate(annotators)}
+            for pair in pairs:
+                ann_i, ann_j = pair
+                i, j = index[ann_i], index[ann_j]
+                matrix[i][j-1] = '{:0.3f}'.format(
+                    overall_alpha(
+                        pair,
+                        items=items,
+                        pattern=pattern,
+                        recursive=recursive,
+                        labels=labels,
+                        verbose=verbose,
+                        average=average
+                    )
                 )
-            )
-        header = [''] + [a.name for a in annotators][1:]
-        print(*header, sep='\t')
-        for ann, row in zip(annotators[:-1], matrix):
-            row = [ann.name] + row
-            print(*row, sep='\t')
+            header = [f'{average}-average'] + [a.name for a in annotators][1:]
+            print(*header, sep='\t')
+            for ann, row in zip(annotators[:-1], matrix):
+                row = [ann.name] + row
+                print(*row, sep='\t')
     else:
         for label, score in sorted(
             alpha(
@@ -516,15 +541,17 @@ def main(
             reverse=True
         ):
             print(f'{label}\t{score}')
-        overall_score = overall_alpha(
-            annotators,
-            items=items,
-            pattern=pattern,
-            recursive=recursive,
-            labels=labels,
-            verbose=verbose
-        )
-        print(f'overall α\t{overall_score}')
+        for average in AVERAGES:
+            overall_score = overall_alpha(
+                annotators,
+                items=items,
+                pattern=pattern,
+                recursive=recursive,
+                labels=labels,
+                verbose=verbose,
+                average=average
+            )
+            print(f'{average}-average α\t{overall_score}')
 
 if __name__ == '__main__':
     import argparse
