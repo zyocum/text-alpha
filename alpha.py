@@ -169,7 +169,7 @@ class ADM(dict):
                     prev_start, prev_end = start, end
             if end < len(self):
                 # gap after the last labeled extent
-                yield {'label': None, 'start': end, 'end': len(self) + 1}
+                yield {'label': None, 'start': end, 'end': len(self)}
         except KeyError:
             print(
                 f'[ERROR] {self.filename}: this ADM JSON contains no {self.items!r} annotations',
@@ -343,7 +343,7 @@ def observation(
                             (subject_g.start - subject_h.start) <= 0
                         )):
                             observations[label] += len(subject_h) ** 2.0
-        observations[label] *= (len(annotators) ** 2.0) - len(annotators)
+        observations[label] *= 2
         observations[label] /= len(anns) * (len(anns) - 1) * (sum(continuums.values()) ** 2.0)
     return observations
 
@@ -373,7 +373,7 @@ def expectation(
         possible_locations = sum(
             (
                (len(annotators) * continuums[docid]) *
-               (len(annotators) * (continuums[docid] - 1))
+               ((len(annotators) * continuums[docid]) - 1)
             ) for docid in continuums if docid_counts[docid].get(label)
         )
         denominator[label] = possible_locations
@@ -608,3 +608,4 @@ if __name__ == '__main__':
         pairwise=args.pair_wise,
         verbose=args.verbose
     )
+

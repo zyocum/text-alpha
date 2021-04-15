@@ -1,0 +1,26 @@
+{
+    "version": "1.1.0",
+    "data": "The cat meows.",
+    "attributes": {
+        "entities": {
+            "type": "list",
+            "itemType": "entities",
+            "items": [
+                {
+                    "mentions": [
+                        {
+                            "startOffset": 4,
+                            "endOffset": 7,
+                            "text": "cat",
+                            "entityId": "T1"
+                        }
+                    ],
+                    "headMentionIndex": 0,
+                    "type": "NOUN",
+                    "entityId": "T1"
+                }
+            ]
+        }
+    },
+    "documentMetadata": { }    
+}
