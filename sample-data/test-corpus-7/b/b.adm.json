@@ -2,25 +2,23 @@
     "version": "1.1.0",
     "data": "The cat meows.",
     "attributes": {
-        "entities": {
+        "token": {
             "type": "list",
-            "itemType": "entities",
+            "itemType": "token",
             "items": [
                 {
-                    "mentions": [
-                        {
-                            "startOffset": 4,
-                            "endOffset": 7,
-                            "text": "cat",
-                            "entityId": "T1"
-                        }
-                    ],
-                    "headMentionIndex": 0,
-                    "type": "VERB",
-                    "entityId": "T1"
+                  "startOffset": 4,
+                  "endOffset": 7,
+                  "text": "cat",
+                  "analyses": [
+                    {
+                      "partOfSpeech": "VERB",
+                      "lemma": "cat"
+                    }
+                  ]
                 }
             ]
         }
     },
-    "documentMetadata": { }
+    "documentMetadata": {}
 }

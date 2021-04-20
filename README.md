@@ -96,6 +96,7 @@ sentence         0.585
 micro-average α  0.585
 macro-average α  0.585
 ---------------  -----
+
 # compute alpha for word token offsets
 $ ./alpha.py sample-data/test-corpus-6/{a,b} -i tokens | tabulate -s $'\t' -F '0.3'
 ---------------  ---
@@ -103,6 +104,7 @@ token            1.0
 micro-average α  1.0
 macro-average α  1.0
 ---------------  ---
+
 # compute alpha for word token part-of-speech tags
 $ ./alpha.py sample-data/test-corpus-6/{a,b} -i postags | tabulate -s $'\t' -F '0.3'
 ---------------  -----
@@ -127,10 +129,10 @@ macro-average α   0.606
 ---------------  ------
 ```
 
-The script can compute agreement between more than two annotators. In the following example, each annotator annotated a token with a different label: 
+The script can compute agreement between more than two annotators. In the following example, each annotator annotated a token with a different part of speech tag: 
 ```
 # compute alpha between just two annotators
-$ ./alpha.py sample-data/test-corpus-7/{a,b} | tabulate -s $'\t' -F '0.3'
+$ ./alpha.py sample-data/test-corpus-7/{a,b} -i postags | tabulate -s $'\t' -F '0.3' 
 ---------------  -----
 NOUN             -0.41
 VERB             -0.41
@@ -139,7 +141,7 @@ macro-average α  -0.41
 ---------------  -----
 
 # compute alpha between three annotators
-$ ./alpha.py sample-data/test-corpus-7/{a,b,c} | tabulate -s $'\t' -F '0.3'
+$ ./alpha.py sample-data/test-corpus-7/{a,b,c} -i postags | tabulate -s $'\t' -F '0.3' 
 ---------------  ------
 NOUN             -0.318
 VERB             -0.318
