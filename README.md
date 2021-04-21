@@ -57,8 +57,8 @@ $ ./alpha.py sample-data/figure-2-example/{i,j} | tabulate -s $'\t' -F 0.3
 ---------------  -----
 k                1.0
 c                0.729
-micro-average α  0.86
-macro-average α  0.865
+micro-average α  0.859
+macro-average α  0.864
 ---------------  -----
 ```
 
@@ -92,10 +92,11 @@ By default, the script computes alpha for entity mention annotations under the `
 # compute alpha for sentence token offsets
 $ ./alpha.py sample-data/test-corpus-6/{a,b} -i sentences | tabulate -s $'\t' -F '0.3'
 ---------------  -----
-sentence         0.599
-micro-average α  0.599
-macro-average α  0.599
+sentence         0.585
+micro-average α  0.585
+macro-average α  0.585
 ---------------  -----
+
 # compute alpha for word token offsets
 $ ./alpha.py sample-data/test-corpus-6/{a,b} -i tokens | tabulate -s $'\t' -F '0.3'
 ---------------  ---
@@ -103,15 +104,16 @@ token            1.0
 micro-average α  1.0
 macro-average α  1.0
 ---------------  ---
+
 # compute alpha for word token part-of-speech tags
 $ ./alpha.py sample-data/test-corpus-6/{a,b} -i postags | tabulate -s $'\t' -F '0.3'
 ---------------  -----
 VERB             1.0
 PUNCT            1.0
-PRON             0.872
-PROPN            0.608
-micro-average α  0.867
-macro-average α  0.87
+PRON             0.869
+PROPN            0.58
+micro-average α  0.859
+macro-average α  0.862
 ---------------  -----
 # compute alpha for word token lemmas
 $ ./alpha.py sample-data/test-corpus-6/{a,b} -i lemmas | tabulate -s $'\t' -F '0.3'
@@ -120,9 +122,31 @@ Mister            1.0
 drop              1.0
 something         1.0
 .                 1.0
-You              -0.109
-you              -0.109
-micro-average α   0.877
-macro-average α   0.63
+You              -0.183
+you              -0.183
+micro-average α   0.87
+macro-average α   0.606
+---------------  ------
+```
+
+The script can compute agreement between more than two annotators. In the following example, each annotator annotated a token with a different part of speech tag: 
+```
+# compute alpha between just two annotators
+$ ./alpha.py sample-data/test-corpus-7/{a,b} -i postags | tabulate -s $'\t' -F '0.3' 
+---------------  -----
+NOUN             -0.41
+VERB             -0.41
+micro-average α  -0.41
+macro-average α  -0.41
+---------------  -----
+
+# compute alpha between three annotators
+$ ./alpha.py sample-data/test-corpus-7/{a,b,c} -i postags | tabulate -s $'\t' -F '0.3' 
+---------------  ------
+NOUN             -0.318
+VERB             -0.318
+PRON             -0.318
+micro-average α  -0.318
+macro-average α  -0.318
 ---------------  ------
 ```

@@ -169,7 +169,7 @@ class ADM(dict):
                     prev_start, prev_end = start, end
             if end < len(self):
                 # gap after the last labeled extent
-                yield {'label': None, 'start': end, 'end': len(self) + 1}
+                yield {'label': None, 'start': end, 'end': len(self)}
         except KeyError:
             print(
                 f'[ERROR] {self.filename}: this ADM JSON contains no {self.items!r} annotations',
@@ -218,7 +218,7 @@ def sniff(
         that docid. (i.e., what Krippendorff refers to as "continuum length").
     
     2. MappingProxyType(docids):
-        A mapping from docids to lists of parallel documents index by the 
+        A mapping from docids to lists of parallel documents indexed by the 
         annotator who annotated the document.
     
     3. MappingProxyType(label_counts):
@@ -327,8 +327,8 @@ def observation(
                             (subject_g.start - subject_h.start) < len(subject_h)
                         )):
                             observations[label] += (subject_g.start - subject_h.start) ** 2.0 + \
-                                            (subject_g.start + len(subject_g) - \
-                                             subject_h.start - len(subject_h)) ** 2.0
+                                                   (subject_g.start + len(subject_g) - \
+                                                   subject_h.start - len(subject_h)) ** 2.0
                         elif all((
                             subject_g.label == label,
                             subject_h.label != label,
@@ -343,7 +343,7 @@ def observation(
                             (subject_g.start - subject_h.start) <= 0
                         )):
                             observations[label] += len(subject_h) ** 2.0
-        observations[label] *= (len(annotators) ** 2.0) - len(annotators)
+        observations[label] *= 2
         observations[label] /= len(anns) * (len(anns) - 1) * (sum(continuums.values()) ** 2.0)
     return observations
 
@@ -373,7 +373,7 @@ def expectation(
         possible_locations = sum(
             (
                (len(annotators) * continuums[docid]) *
-               (len(annotators) * (continuums[docid] - 1))
+               ((len(annotators) * continuums[docid]) - 1)
             ) for docid in continuums if docid_counts[docid].get(label)
         )
         denominator[label] = possible_locations
@@ -398,8 +398,10 @@ def expectation(
                                     for h, subject_h in enumerate(subjects_h):
                                         if subject_h.label != label:
                                             if len(subject_h) >= len(subject_g):
-                                                expectations[label] += (len(subject_g) ** 2.0) * \
-                                                                (len(subject_h) - len(subject_g) + 1)
+                                                expectations[label] += (
+                                                    (len(subject_g) ** 2.0) * \
+                                                    (len(subject_h) - len(subject_g) + 1)
+                                                )
                             denominator[label] -= len(subject_g) * (len(subject_g) - 1)
         expectations[label] *= (2.0 / continuum_length)
         expectations[label] /= denominator[label]
@@ -608,3 +610,4 @@ if __name__ == '__main__':
         pairwise=args.pair_wise,
         verbose=args.verbose
     )
+
