@@ -25,7 +25,7 @@ $ pip3 install -r requirements.txt
 ## Example Usage
 ```
 $ ./alpha.py -h
-usage: alpha.py [-h] [-g GLOB_PATTERN] [-R] [-i {lemmas,tokens,postags,sentences,mentions}] [-l LABELS [LABELS ...]] [-p] [-v]
+usage: alpha.py [-h] [-g GLOB_PATTERN] [-R] [-i {tokens,identities,postags,lemmas,sentences,mentions}] [-l LABELS [LABELS ...]] [-p] [-v]
                 annotators [annotators ...]
 
 This script computes Krippendorff's alpha, a measure of inter-annotator agreement (a.k.a. IAA or inter-annotator reliability). The formulation of IAA
@@ -42,7 +42,7 @@ optional arguments:
   -g GLOB_PATTERN, --glob-pattern GLOB_PATTERN
                         glob pattern for matching annotation files within each annotator directory (default: *.adm.json)
   -R, --non-recursive   if this is specified, annotator directories will not be searched recursively for annotation files (default: True)
-  -i {lemmas,tokens,postags,sentences,mentions}, --items {lemmas,tokens,postags,sentences,mentions}
+  -i {tokens,identities,postags,lemmas,sentences,mentions}, --items {tokens,identities,postags,lemmas,sentences,mentions}
                         choose which ADM attribute items to compute alpha for (default: mentions)
   -l LABELS [LABELS ...], --labels LABELS [LABELS ...]
                         allow-list of labels to check (by default, all labels in the data will be assessed) (default: None)

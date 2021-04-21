@@ -126,6 +126,14 @@ class ADM(dict):
                 mention['type'] = entity.get('type')
                 yield mention
     
+    def identities(self):
+        """Generate entity mentions augmented with their
+        linked entity identifiers."""
+        for entity in self.attributes['entities']['items']:
+            for mention in entity['mentions']:
+                mention['type'] = entity.get('entityId')
+                yield mention
+    
     def sentences(self):
         """Generate sentences from the ADM"""
         for sentence in self.attributes['sentence']['items']:
@@ -581,7 +589,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '-i', '--items',
         default='mentions',
-        choices={'mentions', 'tokens', 'sentences', 'postags', 'lemmas'},
+        choices={'mentions', 'identities', 'tokens', 'sentences', 'postags', 'lemmas'},
         help='choose which ADM attribute items to compute alpha for'
     )
     parser.add_argument(
