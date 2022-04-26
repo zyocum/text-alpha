@@ -345,8 +345,8 @@ def observation(
                         )):
                             observations[label] += len(subject_g) ** 2.0
                         elif all((
-                            subject_g != label,
-                            subject_h == label,
+                            subject_g.label != label,
+                            subject_h.label == label,
                             (len(subject_h) - len(subject_g)) <= (subject_g.start - subject_h.start),
                             (subject_g.start - subject_h.start) <= 0
                         )):
