@@ -4,9 +4,9 @@ Python implementation of character-level, textual inter-annotator agreement with
 The implementation is based on the formulation of Krippendorff's alpha for textual content analysis in:
 
 [Krippendorff, Klaus. "Measuring the reliability of qualitative text analysis data."
-Quality and quantity 38 (2004): 787-800.](https://repository.upenn.edu/cgi/viewcontent.cgi?article=1042&context=asc_papers)
+Quality and quantity 38 (2004): 787-800.](https://link.springer.com/content/pdf/10.1007/s11135-004-8107-7.pdf)
 
-The worked example included in the appendix of [Krippendorff (2004)]((https://repository.upenn.edu/cgi/viewcontent.cgi?article=1042&context=asc_papers)) is included in the sample data for testing: [`figure-2-example`](https://github.com/zyocum/text-alpha/tree/main/sample-data/figure-2-example)
+The worked example included in the appendix of [Krippendorff (2004)]((https://link.springer.com/content/pdf/10.1007/s11135-004-8107-7.pdf)) is included in the sample data for testing: [`figure-2-example`](https://github.com/zyocum/text-alpha/tree/main/sample-data/figure-2-example)
 
 The expected data format is character-level standoff annotations in the [Basis Technology Annotated Data Model](https://github.com/basis-technology-corp/annotated-data-model).
 
@@ -50,7 +50,7 @@ optional arguments:
   -v, --verbose         write verbose output to stderr (default: False)
 ```
 
-If you run `alpha.py` providing paths to annotator directories containing parallel `*.adm.json` files, then the script with compute and report character-level alpha scores for each labeled entity type in the data, as well as an overall alpha score across all entity types:
+If you run `alpha.py` providing paths to annotator directories containing parallel `*.adm.json` files, then the script will compute and report character-level alpha scores for each labeled entity type in the data, as well as an overall alpha score across all entity types:
 
 ```
 $ ./alpha.py sample-data/figure-2-example/{i,j} | tabulate -s $'\t' -F 0.3
